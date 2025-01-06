@@ -1,13 +1,26 @@
-import express, { Request, Response } from "express";
-import {ApolloServer} from "@apollo/server"
+import express from "express";
+import { startStandaloneServer } from "@apollo/server/standalone"
+import { expressMiddleware } from "@apollo/server/express4";
+import { createApolloServer } from "./graphql";
+import cors from "cors";
 
 const app = express();
+const PORT = Number(process.env.PORT) || 8080;
 
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World");
+app.use(express.json());
+app.use(cors());
+
+app.get('/api', (req, res) => {
+    res.send('Hello World');
 });
 
-app.listen(8080, (): void => {
-    console.log("Server running on port 8080");
-});
+createApolloServer().then(async (gqlServer) => {
+    // @ts-expect-error
+    app.use('/graphql',expressMiddleware(gqlServer));
+
+    app.listen(PORT, () => {
+        console.log('App is running on port', PORT);
+    });
+})
+
