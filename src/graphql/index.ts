@@ -1,20 +1,26 @@
 import { ApolloServer } from "@apollo/server";
-import Schema from "./schema";
+import { MutationResolvers, QueryResolvers } from "./resolvers";
+import { queries } from "./queries";
+import { typedefs } from "./typedefs";
+import { mutations } from "./mutation";
 
 export const createApolloServer = async () => {
     const gqlServer = new ApolloServer({
-        typeDefs: `#graphql${Schema}`,
+        typeDefs: `#graphql
+            ${typedefs}
+            type Query{
+                ${queries}
+            }
+            type Mutation{
+                ${mutations}
+            }
+        `,
         resolvers: {
             Query: {
-                product: () => {
-                    return {
-                        id: "1",
-                        name: "Product 1",
-                        description: "Product 1 description",
-                        price: 100,
-                        soldOut: false
-                    }
-                }
+                ...QueryResolvers,
+            },
+            Mutation: {
+                ...MutationResolvers,
             }
         },
     });
