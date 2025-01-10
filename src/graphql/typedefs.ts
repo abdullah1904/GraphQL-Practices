@@ -3,9 +3,6 @@ export const typedefs = `#graphql
         SOLD_OUT
         AVAILABLE
     }
-    type Store{
-        name: String
-    }
     type Product{
         id : ID
         name: String
@@ -13,6 +10,5 @@ export const typedefs = `#graphql
         price: Float
         inventory: Int
         soldOut: SoldStatus
-        stores: [Store]!
     }
 `

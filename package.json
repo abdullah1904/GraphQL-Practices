@@ -15,8 +15,10 @@
     "@types/cors": "^2.8.17",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "graphql": "^16.10.0"
+    "graphql": "^16.10.0",
+    "mongoose": "^8.9.4"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

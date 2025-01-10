@@ -3,10 +3,12 @@ import { MutationResolvers, QueryResolvers } from "./resolvers";
 import { queries } from "./queries";
 import { typedefs } from "./typedefs";
 import { mutations } from "./mutation";
+import { connectDB } from "../lib/connectDB";
 
 export const createApolloServer = async () => {
-    const gqlServer = new ApolloServer({
-        typeDefs: `#graphql
+    try {
+        const gqlServer = new ApolloServer({
+            typeDefs: `#graphql
             ${typedefs}
             type Query{
                 ${queries}
@@ -15,15 +17,20 @@ export const createApolloServer = async () => {
                 ${mutations}
             }
         `,
-        resolvers: {
-            Query: {
-                ...QueryResolvers,
+            resolvers: {
+                Query: {
+                    ...QueryResolvers,
+                },
+                Mutation: {
+                    ...MutationResolvers,
+                }
             },
-            Mutation: {
-                ...MutationResolvers,
-            }
-        },
-    });
-    await gqlServer.start();
-    return gqlServer;
+        });
+        await Promise.all([connectDB(), gqlServer.start()]);
+        return gqlServer;
+    }
+    catch (error) {
+        console.error(error);
+        throw new Error("Error while creating Apollo Server");
+    }
 }
